@@ -1,0 +1,27 @@
+#In azure use "kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/cloud/deploy.yaml"
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-1
+  labels:
+    name: ingress-1
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          service:
+            name: client-cluster-ip
+            port: 
+              number: 80
+      - path: /api/
+        backend:
+          serviceName: server-cluster-ip
+          servicePort: 8080
+

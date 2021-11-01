@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: storagelimits
+spec:
+  limits:
+  - type: PersistentVolumeClaim
+    max:
+      storage: 2Gi
+    min:
+      storage: 1Gi
+
+---
+
+
+# Or we can use resource Quota
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: storagequota
+spec:
+  hard:
+    persistentvolumeclaims: "5"
+    requests.storage: "5Gi"

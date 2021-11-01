@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+spec:
+  affinity:
+  #It says that the pod will be scheduled only on those nodes that are in the same zone of at-least 
+  #one running pod in the zone with the disk:P1 key value pair.
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: disk
+            operator: In
+            values:
+            - P1
+        topologyKey: topology.kubernetes.io/zone
+    podAntiAffinity:
+    #the pod should not be bind to a node that lays in the same zone as 
+    #that of a Pod with Key value pair as disk:P2.
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: disk
+              operator: In
+              values:
+              - p2
+          topologyKey: topology.kubernetes.io/zone
+  containers:
+  - name: demo
+    image: nginx
